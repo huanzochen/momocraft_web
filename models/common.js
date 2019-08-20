@@ -1,11 +1,16 @@
-import db from '../util/momocraftweb.js';
+const db = require('../util/momocraftweb.js');
 
-module.exports = class {
-    
-    static getCommon(){
-        return db.query('SELECT * FROM web.common;', function (error, results, fields) {
-            if(err) throw err;
-        });
+
+// READ
+
+module.exports = class Category{
+    constructor(id, name){
+        this.id = id;
+        this.name = name;
+    }
+
+    static getCommon() {
+        return db.query('SELECT * FROM web.common;');
     }
 
 

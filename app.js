@@ -21,8 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('*', function (req, res, next) {
-  console.dir(req.hostname + req.originalUrl);
-  console.dir(req.ip);
   if(req.secure){
       return next();
   }
