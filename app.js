@@ -19,6 +19,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.get('*', function (req, res, next) {
+  console.dir(req.hostname + req.originalUrl);
+  console.dir(req.ip);
+  if(req.secure){
+      return next();
+  }
+  res.redirect('https://' + req.hostname + req.originalUrl);
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

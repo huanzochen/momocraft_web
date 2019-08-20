@@ -27,14 +27,6 @@ var server = https.createServer({
   cert: fs.readFileSync('SSL/server.crt')
 },app);
 
-
-app.all('*', function (req, res, next) { 
-  if(req.protocol === 'https'){
-      return next();
-  }
-  res.redirect('https://' + req.hostname + rea.url);
-});
-
 /**
  * Listen on provided port, on all network interfaces.
  */
