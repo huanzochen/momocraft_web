@@ -1,7 +1,7 @@
 const moment = require('moment');
 const _ = require('lodash');
 
-const common = require('../models/common');
+const Common = require('../models/common');
 
 
 /* READ *****************************************/
@@ -9,7 +9,7 @@ const common = require('../models/common');
 exports.getPage = async (req, res, next) => {
     let common;
 
-    const getCommon = await common.getCommon()
+    const getCommon = await Common.getCommon()
     .then(([rows]) => {
         common = rows;
     });

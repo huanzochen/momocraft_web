@@ -1,7 +1,7 @@
 const moment = require('moment');
 const _ = require('lodash');
 
-const member = require('../models/member');
+const Member = require('../models/member');
 
 
 /* READ *****************************************/
@@ -9,7 +9,7 @@ const member = require('../models/member');
 exports.getPage = async (req, res, next) => {
     let member;
 
-    const getMember = await member.getMember()
+    const getMember = await Member.getMember()
     .then(([rows]) => {
         member = rows;
     })

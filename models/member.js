@@ -10,7 +10,7 @@ module.exports = class Category{
     }
 
     static getMember() {
-        return db.query('SELECT * FROM web.common;');
+        return db.query('SELECT * FROM web.member;');
     }
 
 
