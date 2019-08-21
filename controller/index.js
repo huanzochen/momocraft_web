@@ -11,16 +11,20 @@ exports.getPage = async (req, res, next) => {
 
     const getCommon = await Common.getCommon()
     .then(([rows]) => {
-        console.dir(rows[(_.map(rows, "name").indexOf("info"))].text);
         common = rows;
     })
 
     let data = {
-        common: common
+        common: common,
+        _: _
     }
 
     res.render('index', {
         title: 'momocraft',
-        common: common
+        common: common,
+        _: _
      });
 };
+
+/*  console.dir(rows[(_.map(rows, "name").indexOf("info"))].text); */
+

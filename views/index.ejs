@@ -6,11 +6,7 @@
 -->
 <html>
 	<head>
-		<title>
-			<% console.dir(common.filter(function(value) {
-				return value === 'pineapple'
-			  })) ;%>
-			<%= common[3].name %>momocraft.info</title>
+		<title><%= common[(_.map(common, "name").indexOf("info"))].text; %></title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -18,7 +14,7 @@
         <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Tangerine">
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+		<!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115467360-1"></script>
         <script>
           window.dataLayer = window.dataLayer || [];
@@ -36,11 +32,11 @@
 					<div id="header">
 
 						<!-- Logo -->
-							<h1 ><a href="">茉茉伺服器</a></h1>
+							<h1 ><a href=""><%= common[(_.map(common, "name").indexOf("name_ch"))].text; %></a></h1>
 						<!-- Nav -->
 							<nav id="nav">
 								<ul>
-									<li class="current"><a href="http://momocraft.tw">簡介</a></li>
+									<li class="current"><a href="/" > 簡介</a></li>
                                     <li><a href="news.html">最新消息</a>
                                     <li><a href="newscomer.html">新手必看</a>
                                     </li>    
@@ -51,7 +47,7 @@
                                             
                                         </ul>
                                     </li>
-                                    <li><a href="game.html">小遊戲(限時開放)</a></li>
+                                    <li><a href="game.html">小遊戲(限時開放) </a></li>
 									<li>
 										<a href="donate.html">贊助支持</a>
 									</li>
@@ -62,8 +58,10 @@
 						<!-- Banner -->
 							<section id="banner">
 								<header style="font-family: 'cwTeXHei', sans-serif;">
-									<h2 style="color:#FCCBDB;font-family: 'cwTeXHei', sans-serif;">歡迎來到茉茉伺服</h2>
-                                    <p><dfn style="color:yellow">伺服器IP: </dfn><dfn style=" color:white;">momocraft.tw</dfn><br><dfn style="color:yellow">狀況:</dfn><dfn style="color:lightgreen"> 開放公測中</dfn><br><dfn style="color:yellow">RC:</dfn><dfn style="color:white"> 27284534</dfn></p>
+									<h2 style="color:#FCCBDB;font-family: 'cwTeXHei', sans-serif;"><%= common[(_.map(common, "name").indexOf("name_ch"))].text; %></h2>
+									<p><dfn style="color:yellow">伺服器IP: </dfn><dfn style=" color:white;"><%= common[(_.map(common, "name").indexOf("website"))].text; %></dfn><br>
+										<dfn style="color:yellow">狀況:</dfn><dfn style="color:lightgreen"> 開放公測中</dfn><br>
+										<a style="color:rgb(0, 119, 255)" href=<%= common[(_.map(common, "name").indexOf("discord"))].text; %>>Discord(點我連結)</a></p>
                                     <br>
                                     <dfn style=" color:white;">※如果有冒險者登不進去 請到我們的粉絲專頁和<a href="https://fb.me/momocraft.tw">我們聯絡</a>喔！</dfn>
                                     
@@ -139,6 +137,7 @@
         
 
 		<!-- Scripts -->
+			<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.dropotron.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
