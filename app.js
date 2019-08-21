@@ -4,9 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-const session = require('express-session')
+const session = require('express-session');
 
 var indexRouter = require('./routes/index');
+var loginRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -33,7 +34,8 @@ app.get('*', function (req, res, next) {
   res.redirect('https://' + req.hostname + req.originalUrl);
 });
 
-app.use('/',indexRouter);
+app.use('/', indexRouter);
+app.use('/login', loginRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

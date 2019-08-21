@@ -1,7 +1,7 @@
 const moment = require('moment');
 const _ = require('lodash');
 
-const Common = require('../models/common');
+const common = require('../models/common');
 
 
 /* READ *****************************************/
@@ -9,10 +9,10 @@ const Common = require('../models/common');
 exports.getPage = async (req, res, next) => {
     let common;
 
-    const getCommon = await Common.getCommon()
+    const getCommon = await common.getCommon()
     .then(([rows]) => {
         common = rows;
-    })
+    });
 
     
     // 可以用 req.session 拿取存在 session 的值
@@ -25,8 +25,8 @@ exports.getPage = async (req, res, next) => {
     } else {
         req.session.views = 1
         var hour = 3600 * 1000;
-        req.session.cookie.expires = new Date(Date.now() + hour)
-        req.session.cookie.maxAge = hour
+        req.session.cookie.expires = new Date(Date.now() + hour);
+        req.session.cookie.maxAge = hour;
     }
     console.dir('viewsID: ' + req.session);
     console.dir(req.session);
