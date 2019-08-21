@@ -1,4 +1,4 @@
-const db = require('../util/momocraftweb.js');
+const db = require('../util/momodb');
 
 
 // READ
