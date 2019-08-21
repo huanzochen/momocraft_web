@@ -28,8 +28,6 @@ exports.getPage = async (req, res, next) => {
         req.session.cookie.expires = new Date(Date.now() + hour);
         req.session.cookie.maxAge = hour;
     }
-    console.dir('viewsID: ' + req.session);
-    console.dir(req.session);
 
     res.render('index', {
         title: 'momocraft',

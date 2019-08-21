@@ -15,11 +15,15 @@
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115467360-1"></script>
         <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-          gtag('config', 'UA-115467360-1');
+		gtag('config', 'UA-115467360-1');
+
+		function savePost() {
+			document.getElementById("savePost").submit();
+		}
         </script>
 	</head>
 	<body class="no-sidebar">
@@ -62,22 +66,26 @@
 
 						<!-- Content -->
 							<article class="box login">
-                                <section style="padding: 100px 100px 10px;">
-									<form class="" role="form">
+                                <section class="sectionlogin">
+									<form id="savePost" method="post" action="/login/submit">
 										<div class="">
-											<span class="input-group-addon">帳號</span>
-											<input type="text" class="" >
+											<span class="login">帳號:</span>
+											<input type="text" name="account">
 										</div>
 										<br>
 										<div class="">
-											<p> 密碼</p>
-											<input type="password" class="">
+											<span class="login">密碼:</span>
+											<input type="password" name="password">
 										</div>
 										<br>
 										<div class="">
-											<input type="text" class="">
+											<span class="login">信箱:</span>
+											<input type="email" name="email">
 										</div>
 									</form>
+									<div class="submit">
+										<button onclick="savePost()">登入</button>
+									</div>
 								</section>
 							</article>
 
