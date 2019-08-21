@@ -1828,6 +1828,10 @@
 				padding: 2.75em 1.75em 2.75em 1.75em;
 			}
 
+				.box.login {
+					padding: 0px 15em 0 15em;
+				}
+
 				.box .image.featured {
 					left: 1.75em;
 					top: 1.75em;

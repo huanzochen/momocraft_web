@@ -14,6 +14,7 @@ exports.getPage = async (req, res, next) => {
         member = rows;
     })
 
+    console.dir(member);
     res.render('login', {
         title: 'momocraft',
         _: _,
