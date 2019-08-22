@@ -1,30 +1,21 @@
 const moment = require('moment');
 const _ = require('lodash');
-const fd = require('../util/findarray');
-const crypto = require('crypto');
 const session = require('express-session')
-const app = require('../app');
 
+const app = require('../app');
+const fd = require('../util/findarray');
+const crypt = require('../util/crypt');
 
 const Member = require('../models/member');
-const Sess = require('../models/session');
 
 
 /* READ *****************************************/
 
 exports.getPage = async (req, res, next) => {
-    let member;
-
-    const getMember = await Member.getMember()
-    .then(([rows]) => {
-        member = rows;
-    })
-
-    console.dir(member);
     res.render('login', {
         title: 'momocraft',
         _: _,
-        member: member
+        errorcode: ''
      });
 };
 
@@ -32,33 +23,42 @@ exports.getPage = async (req, res, next) => {
 
 exports.submitData = async (req, res, next) => {
     let verify;
-    let mem;
 
     const submit = await Member.queryMember(req,res)
         .then(([rows]) => {
             verify = rows;
         })
-        .catch(err => console.log(err));
+        .catch(err => console.dir(err));
 
-    if(req.body.password == verify[(_.map(verify, "act_name").indexOf(req.body.account))].pwd){
-        console.dir("ya!");
+    if (JSON.stringify(verify) === '[]') {
+        console.dir("此用戶不存在");
+        res.render('login', { 
+            errorcode: '查無此帳號或密碼錯誤!' 
+        });
     }
     else {
-        console.dir("NOOO!");
-    }
-
-    const hash = crypto.createHmac('sha256', 'momopig260')
-                   .digest('hex');
-    
-
-
-    var hour = 3600 * 1000;
-    req.session.cookie.name = req.body.account;
-    req.session.cookie.expires = new Date(Date.now() + hour)
-
-    if(req.session){
-        console.dir(hash);
-        console.dir(mem);
+        console.dir(verify);
+        let pwdcheck = crypt(req,res, next);
+        if (pwdcheck == verify[(_.map(verify, "act_name").indexOf(req.body.account))].pwd){
+            var hour = 3600 * 1000;
+            console.dir("密碼核對正確!");
+            if (req.session) {
+                req.session.views++;
+            }
+            else {
+                req.session.views = 1;
+                req.session.cookie.name = req.body.account;
+                req.session.cookie.expires = new Date(Date.now() + hour);
+                req.session.loginID = req.body.account;
+            }
+        }
+        else {
+            console.dir("密碼核對錯誤!");
+            console.dir(verify);
+            res.render('login', { 
+                errorcode: '查無此帳號或密碼錯誤!'
+            });
+        }
     }
 
 

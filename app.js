@@ -8,6 +8,7 @@ const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
+var registerRouter = require('./routes/register');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -23,7 +24,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 // 使用 session middleware
 app.use(session({
-  secret: 'keyboard cat'
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
 }))
 
 
@@ -36,6 +39,7 @@ app.get('*', function (req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

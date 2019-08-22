@@ -1,18 +1,23 @@
 const db = require('../util/momodb');
 
 
-// READ
+
 
 module.exports = class {
-    static getMember() {
-        return db.query('SELECT * FROM web.member;');
-    }
+
+    // READ
 
     static queryMember(req,res) {
         const account = req.body.account;
         return(db.execute('SELECT * FROM web.member where act_name = ?', [account]));
     }
 
+    // WRITE
+
+    static writeNewMember(req,res) {
+        return
+
+    }
 
     /*
     // 登入介面
