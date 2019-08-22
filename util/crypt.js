@@ -2,9 +2,9 @@ const _ = require('lodash');
 const crypto = require('crypto');
 
 
-module.exports = function (req, res, next) {
+module.exports = function (cryptstring) {
         const hash = crypto.createHash('sha256');
-        hash.update((hash.update(req.body.password) + 'edwardsekaino.1'));
+        hash.update((hash.update(cryptstring) + 'edwardsekaino.1'));
         return (hash.digest('hex'));
     }
 

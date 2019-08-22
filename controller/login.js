@@ -8,14 +8,22 @@ const crypt = require('../util/crypt');
 
 const Member = require('../models/member');
 
+let hour = 3600 * 1000;
 
 /* READ *****************************************/
 
 exports.getPage = async (req, res, next) => {
+    let fieldlength;
+
+    await Member.getFieldLength(req,res)
+    .then(([rows]) => {
+        fieldlength = rows;
+    })
+    .catch(err => console.dir(err));
     res.render('login', {
-        title: 'momocraft',
         _: _,
-        errorcode: ''
+        errorcode: '',
+        fieldlength
      });
 };
 
@@ -24,40 +32,68 @@ exports.getPage = async (req, res, next) => {
 exports.submitData = async (req, res, next) => {
     let verify;
 
-    const submit = await Member.queryMember(req,res)
+    await Member.getFieldLength(req,res)
+        .then(([rows]) => {
+            fieldlength = rows;
+        })
+        .catch(err => console.dir(err));
+
+    /* 強制限制欄位為DB限制之長度(防有人偷改)*/
+    req.body.account = (req.body.account).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("act_name"))].CHARACTER_MAXIMUM_LENGTH));
+    req.body.password =  (req.body.password).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("pwd"))].CHARACTER_MAXIMUM_LENGTH));
+
+    await Member.queryMember(req,res)
         .then(([rows]) => {
             verify = rows;
         })
         .catch(err => console.dir(err));
+    
 
+    /*  檢查用戶是否存在*/ 
     if (JSON.stringify(verify) === '[]') {
         console.dir("此用戶不存在");
         res.render('login', { 
-            errorcode: '查無此帳號或密碼錯誤!' 
+            _: _,
+            errorcode: '查無此帳號或密碼錯誤!'
         });
     }
     else {
-        console.dir(verify);
-        let pwdcheck = crypt(req,res, next);
+        /*  檢查密碼是否正確*/
+        let pwdcheck = crypt(req.body.password);
         if (pwdcheck == verify[(_.map(verify, "act_name").indexOf(req.body.account))].pwd){
-            var hour = 3600 * 1000;
             console.dir("密碼核對正確!");
             if (req.session) {
+                /* 密碼正確，返回*/
                 req.session.views++;
             }
             else {
+                /* 密碼正確且此session初次造訪網站*/
                 req.session.views = 1;
-                req.session.cookie.name = req.body.account;
-                req.session.cookie.expires = new Date(Date.now() + hour);
+                req.session.cookie.expires = Date(Date.now() + hour);
                 req.session.loginID = req.body.account;
             }
         }
         else {
             console.dir("密碼核對錯誤!");
+            console.dir("用戶資料");
             console.dir(verify);
             res.render('login', { 
+                _: _,
                 errorcode: '查無此帳號或密碼錯誤!'
             });
+            /*
+            let test = Date.now();
+            console.dir(Date(test));
+            test += 3600000;
+            console.dir(Date(test));
+            req.session.cookie.maxAge = Date.now() + 3600000;
+            req.session.cookie.name = req.body.account;
+            console.dir(Date(req.session.cookie.originalMaxAge));
+            
+            req.session.loginID = req.body.account;
+            console.dir(req.session.cookie);
+            console.dir(req.session);
+            */
         }
     }
 

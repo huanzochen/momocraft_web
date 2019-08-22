@@ -72,7 +72,7 @@
 						<!-- Content -->
 							<article class="box login">
                                 <section class="sectionlogin">
-									<form id="savePost" method="post" action="/login/submit">
+									<form id="savePost" method="post" action="/register/submit">
 										<div class="">
 											<span class="login">帳號:  <dfn style="color:red"><%=errorcode %></dfn></span>
 											<input type="text" name="account">
@@ -84,12 +84,17 @@
 										</div>
 										<br>
 										<div class="">
+											<span class="login">再次確認密碼:</span>
+											<input type="password" name="passwordCheck">
+										</div>
+										<br>
+										<div class="">
 											<span class="login">信箱:</span>
 											<input type="email" name="email">
 										</div>
 									</form>
 									<div class="submit">
-										<button onclick="savePost()">註冊/button>
+										<button onclick="savePost()">註冊</button>
 									</div>
 								</section>
 							</article>

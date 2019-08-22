@@ -75,12 +75,12 @@
 									<form id="savePost" method="post" action="/login/submit">
 										<div class="">
 											<span class="login">帳號:  <dfn style="color:red"><%=errorcode %></dfn></span>
-											<input type="text" name="account">
+											<input type="text" name="account" maxlength=<%= fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("act_name"))].CHARACTER_MAXIMUM_LENGTH %>>
 										</div>
 										<br>
 										<div class="">
 											<span class="login">密碼:</span>
-											<input type="password" name="password">
+											<input type="password" name="password" maxlength=<%= fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("pwd"))].CHARACTER_MAXIMUM_LENGTH %>>
 										</div>
 										<br>
 									</form>

@@ -1,4 +1,5 @@
 const db = require('../util/momodb');
+const crypt = require('../util/crypt');
 
 
 
@@ -8,15 +9,22 @@ module.exports = class {
     // READ
 
     static queryMember(req,res) {
-        const account = req.body.account;
+        let account = req.body.account;
         return(db.execute('SELECT * FROM web.member where act_name = ?', [account]));
+    }
+
+    static getFieldLength(req,res) {
+        return(db.execute("SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'web' AND TABLE_NAME = 'member'"));
     }
 
     // WRITE
 
     static writeNewMember(req,res) {
-        return
-
+        let account = req.body.account;
+        let password = req.body.password;
+        let email = req.body.email;
+        password = crypt(password);
+        return(db.execute("INSERT INTO `web`.`member` (`act_name`, `pwd`, `email`) VALUES (?, ?, ?)", [account, password, email]));
     }
 
     /*
