@@ -38,7 +38,7 @@ exports.submitData = async (req, res, next) => {
         })
         .catch(err => console.dir(err));
 
-    /* 強制限制欄位為DB限制之長度(防有人偷改)*/
+    /* 強制限制欄位為DB限制之長度(防有人偷改) */
     req.body.account = (req.body.account).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("act_name"))].CHARACTER_MAXIMUM_LENGTH));
     req.body.password =  (req.body.password).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("pwd"))].CHARACTER_MAXIMUM_LENGTH));
 
@@ -49,7 +49,7 @@ exports.submitData = async (req, res, next) => {
         .catch(err => console.dir(err));
     
 
-    /*  檢查用戶是否存在*/ 
+    /*  檢查用戶是否存在 */ 
     if (JSON.stringify(verify) === '[]') {
         console.dir("此用戶不存在");
         res.render('login', { 
@@ -58,16 +58,16 @@ exports.submitData = async (req, res, next) => {
         });
     }
     else {
-        /*  檢查密碼是否正確*/
+        /*  檢查密碼是否正確 */
         let pwdcheck = crypt(req.body.password);
         if (pwdcheck == verify[(_.map(verify, "act_name").indexOf(req.body.account))].pwd){
             console.dir("密碼核對正確!");
             if (req.session) {
-                /* 密碼正確，返回*/
+                /* 密碼正確，返回 */
                 req.session.views++;
             }
             else {
-                /* 密碼正確且此session初次造訪網站*/
+                /* 密碼正確且此session初次造訪網站 */
                 req.session.views = 1;
                 req.session.cookie.expires = Date(Date.now() + hour);
                 req.session.loginID = req.body.account;
@@ -96,10 +96,6 @@ exports.submitData = async (req, res, next) => {
             */
         }
     }
-
-
-
-
 }
 
 

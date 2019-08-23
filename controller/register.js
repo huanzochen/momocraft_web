@@ -11,8 +11,16 @@ const Member = require('../models/member');
 /* READ *****************************************/
 
 exports.getPage = async (req, res, next) => {
+    let fieldlength;
+
+    await Member.getFieldLength(req,res)
+    .then(([rows]) => {
+        fieldlength = rows;
+    })
+    .catch(err => console.dir(err));
     res.render('register', {
         _: _,
+        fieldlength: fieldlength,
         errorcode: ''
     });
 };
@@ -20,7 +28,6 @@ exports.getPage = async (req, res, next) => {
 /* SUBMIT **********************************/
 
 exports.submitData = async (req, res, next) => {
-    let fieldlength;
     let isregistered;
 
     await Member.getFieldLength(req,res)
@@ -29,11 +36,12 @@ exports.submitData = async (req, res, next) => {
         })
         .catch(err => console.dir(err));
 
-    /* 強制限制欄位為DB限制之長度(防有人偷改)*/
+    /* 強制限制欄位為DB限制之長度(防有人偷改) */
     req.body.account = (req.body.account).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("act_name"))].CHARACTER_MAXIMUM_LENGTH));
     req.body.password =  (req.body.password).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("pwd"))].CHARACTER_MAXIMUM_LENGTH));
     req.body.passwordCheck =  (req.body.passwordCheck).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("pwd"))].CHARACTER_MAXIMUM_LENGTH));
     req.body.email =  (req.body.email).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("email"))].CHARACTER_MAXIMUM_LENGTH));
+    /* 檢查密碼長度及一致性 */
     if (req.body.password.length < 5) {
         res.render('register', {
             _: _,
