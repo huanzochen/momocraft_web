@@ -9,20 +9,19 @@ const Common = require('../models/common');
 exports.getPage = async (req, res, next) => {
     let common;
 
-    const getCommon = await Common.getCommon()
+    await Common.getCommon()
     .then(([rows]) => {
         common = rows;
     })
+    .catch(err => console.dir(err));
 
-    let data = {
-        common: common,
-        _: _
-    }
-
+    console.dir("session");
+    console.dir(req.session);
     res.render('index', {
         title: 'momocraft',
+        _: _,
         common: common,
-        _: _
+        session: req.session
      });
 };
 
