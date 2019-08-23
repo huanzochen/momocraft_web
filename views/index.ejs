@@ -10,7 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
         <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Tangerine">
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
@@ -28,114 +28,83 @@
 		<div id="page-wrapper">
 
 			<!-- Header -->
-				<div id="header-wrapper">
-					<div id="header">
+			<div id="header-wrapper">
+				<div id="header">
+					<%- include('index_nav'); -%>
+					<!-- Banner -->
+						<section id="banner">
+							<header style="font-family: 'cwTeXHei', sans-serif;">
+								<h2 style="color:#FCCBDB;font-family: 'cwTeXHei', sans-serif;"><%= common[(_.map(common, "name").indexOf("name_ch"))].text; %></h2>
+								<p><dfn style="color:yellow">伺服器IP: </dfn><dfn style=" color:white;"><%= common[(_.map(common, "name").indexOf("website"))].text; %></dfn><br>
+									<dfn style="color:yellow">狀況:</dfn><dfn style="color:lightgreen"> 開放公測中</dfn><br>
+									<a style="color:rgb(0, 119, 255)" href=<%= common[(_.map(common, "name").indexOf("discord"))].text; %>>Discord(點我連結)</a></p>
+								<br>
+								<dfn style=" color:white;">※如果有冒險者登不進去 請到我們的粉絲專頁和<a href="https://fb.me/momocraft.tw">我們聯絡</a>喔！</dfn>
+								
+							</header>
+						</section>
 
-						<!-- Logo -->
-							<h1 ><a href=""><%= common[(_.map(common, "name").indexOf("name_ch"))].text; %></a></h1>
-						<!-- Nav -->
-							<nav id="nav">
-								<ul>
-									<li class="current"><a href="/" > 簡介</a></li>
-                                    <li><a href="news.html">最新消息</a>
-                                    <li><a href="newscomer.html">新手必看</a>
-                                    </li>    
-                                    <li><a href="rules.html">遊戲制度</a>
-                                        <ul>
-                                            <li><a href="rules.html">規定</a></li>
-                                            <li><a href="#">公會制度(尚未開放)</a></li>
-                                            
-                                        </ul>
-                                    </li>
-									<li>
-										<a href="donate.html">贊助支持</a>
-									</li>
-									<li><a href="contact.html">聯絡我們/徵人才</a></li>
-									<li><a href="#">會員中心</a>
-										<ul>
-											<li><a href="/login"> 登入</a></li>
-											<li><a href="/register"> 註冊 </a></li>
-										</ul>
-									</li>
-								</ul>
-							</nav>
-
-							
-
-						<!-- Banner -->
-							<section id="banner">
-								<header style="font-family: 'cwTeXHei', sans-serif;">
-									<h2 style="color:#FCCBDB;font-family: 'cwTeXHei', sans-serif;"><%= common[(_.map(common, "name").indexOf("name_ch"))].text; %></h2>
-									<p><dfn style="color:yellow">伺服器IP: </dfn><dfn style=" color:white;"><%= common[(_.map(common, "name").indexOf("website"))].text; %></dfn><br>
-										<dfn style="color:yellow">狀況:</dfn><dfn style="color:lightgreen"> 開放公測中</dfn><br>
-										<a style="color:rgb(0, 119, 255)" href=<%= common[(_.map(common, "name").indexOf("discord"))].text; %>>Discord(點我連結)</a></p>
-                                    <br>
-                                    <dfn style=" color:white;">※如果有冒險者登不進去 請到我們的粉絲專頁和<a href="https://fb.me/momocraft.tw">我們聯絡</a>喔！</dfn>
-                                    
-								</header>
-							</section>
-
-						<!-- Intro -->
-							<section id="intro" class="container" style="font-family: 'cwTeXHei', sans-serif;">
-								<div class="row" onclick="location.href='newscomer.html';" style="cursor:pointer;">
-									<div class="4u 12u(mobile)">
-										<section class="first">
-											<i class="icon featured fa-compass"></i>
-											<header>
-												<h2>茉茉選單</h2>
-											</header>
-											<p>
-                                                有了選單,誰還需要打指令?
-                                            </p>
-										</section>
-									</div>
-									<div class="4u 12u(mobile)">
-										<section class="middle">
-											<i class="icon featured alt fa-paw"></i>
-											<header>
-												<h2>動物朋友</h2>
-											</header>
-											<p>朋友何其多，知心有幾人?</p>
-										</section>
-									</div>
-									<div class="4u 12u(mobile)">
-										<section class="last">
-											<i class="icon featured alt2 fa-exchange"></i>
-											<header>
-												<h2>茉茉商城</h2>
-											</header>
-											<p>自由買賣，一夜致富不是夢</p>
-										</section>
-									</div>
-                                    <div class="4u 12u(mobile)">
-										<section class="middle">
-											<i class="icon featured alt3 fa-book"></i>
-											<header>
-												<h2>冒險者公會</h2>
-											</header>
-											<p>冒險、家園、農田<br>你想要的都在這了!</p>
-										</section>
-									</div>
-                                    <div class="4u 12u(mobile)">
-										<section class="last">
-											<i class="icon featured alt4 fa-star"></i>
-											<header>
-												<h2>更多功能</h2>
-											</header>
-											<p>保護區、好友系統<br>PVP、活動...<br>等你來發掘~</p>
-										</section>
-									</div>
+					<!-- Intro -->
+						<section id="intro" class="container" style="font-family: 'cwTeXHei', sans-serif;">
+							<div class="row" onclick="location.href='newscomer.html';" style="cursor:pointer;">
+								<div class="4u 12u(mobile)">
+									<section class="first">
+										<i class="icon featured fa-compass"></i>
+										<header>
+											<h2>茉茉選單</h2>
+										</header>
+										<p>
+											有了選單,誰還需要打指令?
+										</p>
+									</section>
 								</div>
-								<footer>
-									<ul class="actions">
-										<li><a href="newscomer.html" class="button big">開始吧!</a></li>
-									</ul>
-								</footer>
-							</section>
-                        <a style="color:#F6D8D8">&copy; momocraft. All rights reserved.Design: <a style="color:#F6D8D8"  href="http://html5up.net">HTML5 UP</a></a>
-                        
-     
-					</div>
+								<div class="4u 12u(mobile)">
+									<section class="middle">
+										<i class="icon featured alt fa-paw"></i>
+										<header>
+											<h2>動物朋友</h2>
+										</header>
+										<p>朋友何其多，知心有幾人?</p>
+									</section>
+								</div>
+								<div class="4u 12u(mobile)">
+									<section class="last">
+										<i class="icon featured alt2 fa-exchange"></i>
+										<header>
+											<h2>茉茉商城</h2>
+										</header>
+										<p>自由買賣，一夜致富不是夢</p>
+									</section>
+								</div>
+								<div class="4u 12u(mobile)">
+									<section class="middle">
+										<i class="icon featured alt3 fa-book"></i>
+										<header>
+											<h2>冒險者公會</h2>
+										</header>
+										<p>冒險、家園、農田<br>你想要的都在這了!</p>
+									</section>
+								</div>
+								<div class="4u 12u(mobile)">
+									<section class="last">
+										<i class="icon featured alt4 fa-star"></i>
+										<header>
+											<h2>更多功能</h2>
+										</header>
+										<p>保護區、好友系統<br>PVP、活動...<br>等你來發掘~</p>
+									</section>
+								</div>
+							</div>
+							<footer>
+								<ul class="actions">
+									<li><a href="newscomer.html" class="button big">開始吧!</a></li>
+								</ul>
+							</footer>
+						</section>
+					<a style="color:#F6D8D8">&copy; momocraft. All rights reserved.Design: <a style="color:#F6D8D8"  href="http://html5up.net">HTML5 UP</a></a>
+					
+	
+				</div>
             </div>
 		</div>
                         <div align="center">
@@ -145,13 +114,13 @@
 
 		<!-- Scripts -->
 			<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/skel-viewport.min.js"></script>
-			<script src="assets/js/util.js"></script>
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/jquery.dropotron.min.js"></script>
+			<script src="/assets/js/skel.min.js"></script>
+			<script src="/assets/js/skel-viewport.min.js"></script>
+			<script src="/assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
+			<script src="/assets/js/main.js"></script>
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <script>
               (adsbygoogle = window.adsbygoogle || []).push({

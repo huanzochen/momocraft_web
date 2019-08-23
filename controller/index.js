@@ -12,12 +12,16 @@ exports.getPage = async (req, res, next) => {
     await Common.getCommon()
     .then(([rows]) => {
         common = rows;
-    });
+    })
+    .catch(err => console.dir(err));
 
+    console.dir("session");
+    console.dir(req.session);
     res.render('index', {
         title: 'momocraft',
         _: _,
-        common: common
+        common: common,
+        session: req.session
      });
 };
 

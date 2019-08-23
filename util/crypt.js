@@ -10,7 +10,7 @@ const crypt = (cryptstring) => {
 
 module.exports = {
     crypt
-}
+};
 
 
 /*

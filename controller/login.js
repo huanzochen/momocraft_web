@@ -6,6 +6,7 @@ const app = require('../app');
 const fd = require('../util/findarray');
 const crypt = require('../util/crypt');
 
+const Common = require('../models/common');
 const Member = require('../models/member');
 
 let hour = 3600 * 1000;
@@ -13,7 +14,6 @@ let hour = 3600 * 1000;
 /* READ *****************************************/
 
 exports.getPage = async (req, res, next) => {
-    let fieldlength;
 
     await Member.getFieldLength(req,res)
     .then(([rows]) => {
@@ -23,14 +23,14 @@ exports.getPage = async (req, res, next) => {
     res.render('login', {
         _: _,
         errorcode: '',
-        fieldlength
+        session: req.session,
+        fieldlength: fieldlength
      });
 };
 
 /* SUBMIT **********************************/
 
 exports.submitData = async (req, res, next) => {
-    let verify;
 
     await Member.getFieldLength(req,res)
         .then(([rows]) => {
@@ -47,30 +47,40 @@ exports.submitData = async (req, res, next) => {
             verify = rows;
         })
         .catch(err => console.dir(err));
-    
 
     /*  檢查用戶是否存在 */ 
     if (JSON.stringify(verify) === '[]') {
         console.dir("此用戶不存在");
         res.render('login', { 
             _: _,
-            errorcode: '查無此帳號或密碼錯誤!'
+            errorcode: '查無此帳號或密碼錯誤!',
+            session: req.session
         });
     }
     else {
         /*  檢查密碼是否正確 */
-        let pwdcheck = crypt(req.body.password);
+        let pwdcheck = crypt.crypt(req.body.password);
         if (pwdcheck == verify[(_.map(verify, "act_name").indexOf(req.body.account))].pwd){
             console.dir("密碼核對正確!");
-            if (req.session) {
+            if (req.session.views) {
                 /* 密碼正確，返回 */
                 req.session.views++;
+                req.session.user = req.body.account;
+                console.dir("Information about session and cookie");
+                console.dir(req.session);
+                console.dir(req.session.cookie);
+                res.redirect('https://' + req.hostname + '/');
             }
             else {
                 /* 密碼正確且此session初次造訪網站 */
                 req.session.views = 1;
-                req.session.cookie.expires = Date(Date.now() + hour);
-                req.session.loginID = req.body.account;
+                /* 密碼正確，返回 */
+                req.session.views++;
+                req.session.user = req.body.account;
+                console.dir("Information about session and cookie");
+                console.dir(req.session);
+                console.dir(req.session.cookie);
+                res.redirect('/');
             }
         }
         else {
@@ -79,7 +89,8 @@ exports.submitData = async (req, res, next) => {
             console.dir(verify);
             res.render('login', { 
                 _: _,
-                errorcode: '查無此帳號或密碼錯誤!'
+                errorcode: '查無此帳號或密碼錯誤!',
+                session: req.session
             });
             /*
             let test = Date.now();

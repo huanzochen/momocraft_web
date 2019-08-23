@@ -5,10 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const session = require('express-session');
+const _ = require('lodash');
+
 
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
+var logoutRouter = require('./routes/logout');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -26,7 +29,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 900000
+  }
 }))
 
 
@@ -40,6 +48,8 @@ app.get('*', function (req, res, next) {
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
+app.use('/logout', logoutRouter);
+
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

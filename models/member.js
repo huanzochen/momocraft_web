@@ -23,7 +23,7 @@ module.exports = class {
         let account = req.body.account;
         let password = req.body.password;
         let email = req.body.email;
-        password = crypt(password);
+        password = crypt.crypt(password);
         return(db.execute("INSERT INTO `web`.`member` (`act_name`, `pwd`, `email`) VALUES (?, ?, ?)", [account, password, email]));
     }
 
