@@ -37,13 +37,14 @@ app.use(session({
   }
 }))
 
-
+/*
 app.get('*', function (req, res, next) {
   if(req.secure){
       return next();
   }
   res.redirect('https://' + req.hostname + req.originalUrl);
 });
+*/
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
