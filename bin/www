@@ -21,7 +21,7 @@ app.set('port', port);
  * Create HTTP & HTTPS server with redirect.
  */
 
-http.createServer(app).listen(800);
+http.createServer(app).listen(80);
 var server = https.createServer({
   key: fs.readFileSync('SSL/server.key'),
   cert: fs.readFileSync('SSL/server.crt')
