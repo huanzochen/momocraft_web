@@ -1,28 +1,16 @@
 {
-  "name": "momocraft-web",
+  "name": "express-ex",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
-    "JSON": "^1.0.0",
     "cookie-parser": "~1.4.4",
-    "crypto": "^1.0.1",
     "debug": "~2.6.9",
-    "ejs": "~2.6.1",
-    "ejs-lint": "^0.3.0",
-    "ejs-loader": "^0.3.3",
     "express": "~4.16.1",
-    "express-session": "^1.16.2",
     "http-errors": "~1.6.3",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0",
-    "morgan": "~1.9.1",
-    "mysql2": "^1.6.5"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.1"
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1"
   }
 }

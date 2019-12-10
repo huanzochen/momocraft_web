@@ -5,27 +5,21 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('momocraft-web:server');
-var fs = require('fs');
+var debug = require('debug')('express-ex:server');
 var http = require('http');
-var https = require('https');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '4433');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP & HTTPS server with redirect.
+ * Create HTTP server.
  */
 
-http.createServer(app).listen(2048);
-var server = https.createServer({
-  key: fs.readFileSync('SSL/server.key'),
-  cert: fs.readFileSync('SSL/server.crt')
-},app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
