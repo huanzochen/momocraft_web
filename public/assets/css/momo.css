@@ -1,0 +1,17 @@
+.box #dymap {
+    width: 108.3%;
+    height: 25em;
+    left: 1.75em;
+    top: 1.75em;
+    margin: -2.7em 0 4.25em -1.7em;
+}
+
+.box #fbframe{
+    left: 1.75em;
+    top: 1.75em;
+    margin: -2.7em 0 4.25em -1.7em;
+} 
+
+.font {
+    font-family: 'cwTeXHei', sans-serif;
+}
