@@ -7,13 +7,13 @@ function init(){
     console.log(json.一般[1]);
     console.log(typer[1]);
     
-    drawtable(typer); 
+    drawtable(typer);
     
     
     });
 }
 function drawtable(select){
-          
+        
     var tr = $('<tr>').text(select[0]);
     var tbody = $('<tbody>').append(tr);
     $('#rules').append(tbody);
