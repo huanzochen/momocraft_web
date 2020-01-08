@@ -1,6 +1,7 @@
 @import url("fontawesome-all.min.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,900,300italic");
 
+
 /*
 	Dopetrope by HTML5 UP
 	html5up.net | @ajlkn
@@ -99,7 +100,7 @@ input, select, textarea {
 		}
 
 	body, input, textarea, select {
-		font-family: 'Source Sans Pro';
+		font-family: 'cwTeXHei', sans-serif;
 		font-weight: 300;
 		color: #5d5d5d;
 		font-size: 14pt;

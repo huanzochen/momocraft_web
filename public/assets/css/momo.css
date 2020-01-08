@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/earlyaccess/cwtexyen.css");
+@import url(//fonts.googleapis.com/earlyaccess/cwtexhei.css);
+
 .box #dymap {
     width: 108.3%;
     height: 25em;
@@ -12,6 +15,7 @@
     margin: -2.7em 0 4.25em -1.7em;
 } 
 
-.font {
+body, input, textarea, select {
     font-family: 'cwTeXHei', sans-serif;
+    font-weight: 300;
 }
