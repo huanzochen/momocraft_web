@@ -3,7 +3,7 @@ const _ = require('lodash');
 const session = require('express-session')
 
 const app = require('../app');
-const fd = require('../util/findarray');
+const tool = require('../util/customtools');
 const crypt = require('../util/crypt');
 
 const Common = require('../models/common');
@@ -48,8 +48,14 @@ exports.submitData = async (req, res, next) => {
         })
         .catch(err => console.dir(err));
 
+    await Member.queryMomocraftmember(req,res)
+        .then(([rows]) => {
+            momocraftMember = rows;
+        })
+        .catch(err => console.dir(err));
+
     /*  檢查用戶是否存在 */ 
-    if (JSON.stringify(verify) === '[]') {
+    if (JSON.stringify(momocraftMember) === '[]') {
         console.dir("此用戶不存在");
         res.render('login', { 
             _: _,
@@ -58,9 +64,11 @@ exports.submitData = async (req, res, next) => {
         });
     }
     else {
+        console.log('req.ip')
+        console.log(req.ip)
         /*  檢查密碼是否正確 */
-        let pwdcheck = crypt.crypt(req.body.password);
-        if (pwdcheck == verify[(_.map(verify, "act_name").indexOf(req.body.account))].pwd){
+        let pwdcheck = crypt.validate(req.body.password, momocraftMember[(_.map(momocraftMember, "realname").indexOf(req.body.account))].password);
+        if (pwdcheck == tool.getpwd(momocraftMember[(_.map(momocraftMember, "realname").indexOf(req.body.account))].password)){
             console.dir("密碼核對正確!");
             if (req.session.views) {
                 /* 密碼正確，返回 */
@@ -86,7 +94,7 @@ exports.submitData = async (req, res, next) => {
         else {
             console.dir("密碼核對錯誤!");
             console.dir("用戶資料");
-            console.dir(verify);
+            console.dir(pwdcheck);
             res.render('login', { 
                 _: _,
                 errorcode: '查無此帳號或密碼錯誤!',

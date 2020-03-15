@@ -3,7 +3,7 @@ const _ = require('lodash');
 const session = require('express-session')
 
 const app = require('../app');
-const fd = require('../util/findarray');
+const tool = require('../util/customtools');
 
 const Member = require('../models/member');
 

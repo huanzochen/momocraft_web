@@ -1,15 +1,18 @@
 const _ = require('lodash');
 const crypto = require('crypto');
+const tool = require('./customtools');
 
-const crypt = (cryptstring) => {
+const validate = (cryptstring, password) => {
     const hash = crypto.createHash('sha256');
-    hash.update((hash.update(cryptstring) + 'edwardsekaino.1'));
-    return (hash.digest('hex'));
+    const hash2 = crypto.createHash('sha256');
+    hash.update(cryptstring);
+    hash2.update(hash.digest('hex') + tool.getsalt(password));
+    return (hash2.digest('hex'));
 }
 
 
 module.exports = {
-    crypt
+    validate
 };
 
 

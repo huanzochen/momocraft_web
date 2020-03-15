@@ -1,6 +1,6 @@
 // get the client
 const mysql = require('mysql2');
-const info = require('./config/momodb');
+const info = require('./config/momocraft');
  
 // create the pool to database
 const pool = mysql.createPool({
