@@ -22,7 +22,8 @@ exports.getPage = async (req, res, next) => {
         _: _,
         fieldlength: fieldlength,
         errorcode: '',
-        session: req.session
+        session: req.session,
+        currentPage: 'login'
     });
 };
 
@@ -47,14 +48,16 @@ exports.submitData = async (req, res, next) => {
         res.render('register', {
             _: _,
             errorcode: '密碼長度不足',
-            session: req.session
+            session: req.session,
+            currentPage: 'login'
         });
     }
     if (req.body.passwordCheck != req.body.password) {
         res.render('register', {
             _: _,
             errorcode: '請輸入兩次相同的密碼',
-            session: req.session
+            session: req.session,
+            currentPage: 'login'
         });
     }
 
@@ -67,14 +70,16 @@ exports.submitData = async (req, res, next) => {
                 res.render('register', {
                     _: _,
                     errorcode: '帳號名稱已存在，請更換帳號名稱',
-                    session: req.session
+                    session: req.session,
+                    currentPage: 'login'
                 });
             }
             else {
                 res.render('register', {
                     _: _,
                     errorcode: '未知錯誤，請聯絡管理員',
-                    session: req.session
+                    session: req.session,
+                    currentPage: 'login'
                 });
             }
         });
@@ -82,14 +87,16 @@ exports.submitData = async (req, res, next) => {
         res.render('register', {
             _: _,
             errorcode: '註冊成功!請登入',
-            session: req.session
+            session: req.session,
+            currentPage: 'login'
         });
     }
     else {
         res.render('register', {
             _: _,
             errorcode: '出現未知錯誤!請聯繫管理員',
-            session: req.session
+            session: req.session,
+            currentPage: 'login'
         });
     }
 

@@ -9,10 +9,15 @@ const _ = require('lodash');
 
 
 var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var donateRouter = require('./routes/donate');
+
+//登入
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var logoutRouter = require('./routes/logout');
-var usersRouter = require('./routes/users');
+
+
 
 var app = express();
 
@@ -47,11 +52,13 @@ app.get('*', function (req, res, next) {
 */
 
 app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/donate', donateRouter);
+
+// 登入登出
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/logout', logoutRouter);
-
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

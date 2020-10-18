@@ -24,7 +24,8 @@ exports.getPage = async (req, res, next) => {
         _: _,
         errorcode: '',
         session: req.session,
-        fieldlength: fieldlength
+        fieldlength: fieldlength,
+        currentPage: 'login'
      });
 };
 
@@ -54,7 +55,8 @@ exports.submitData = async (req, res, next) => {
         res.render('login', { 
             _: _,
             errorcode: '查無此帳號或密碼錯誤!',
-            session: req.session
+            session: req.session,
+            currentPage: 'login'
         });
     }
     else {
@@ -90,7 +92,8 @@ exports.submitData = async (req, res, next) => {
             res.render('login', { 
                 _: _,
                 errorcode: '查無此帳號或密碼錯誤!',
-                session: req.session
+                session: req.session,
+                currentPage: 'login'
             });
             /*
             let test = Date.now();

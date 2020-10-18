@@ -3,9 +3,28 @@
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li class="current"><a href="/" > 首頁</a></li>
+								<% if (currentPage === 'index') { %>
+									<li class="current">
+								<% } else {  %> 
+									<li>
+								<% } %>
+									<a href="/" > 首頁</a>
+								</li>
+								<% if (currentPage === 'donate') { %>
+									<li class="current">
+								<% } else {  %> 
+									<li>
+								<% } %>
+									<a href="/donate">贊助支持</a>
+								</li>
+
 								<% if (session.user == undefined || session.user == '' ) { %>
-									<li><a href="/login">登入 \ 註冊</a>
+									<% if (currentPage === 'login') { %>
+										<li class="current">
+									<% } else {  %> 
+										<li>
+									<% } %>
+										<a href="/login">登入 \ 註冊</a>
 										<ul>
 											<li><a href="/login"> 登入</a></li>
 											<li><a href="/register"> 註冊 </a></li>
