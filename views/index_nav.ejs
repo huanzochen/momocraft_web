@@ -1,50 +1,20 @@
 					<!-- Logo -->
-					<style>
-						a:link {text-decoration:none;}
-						a:visited {text-decoration:none;}
-						a:hover {text-decoration:none;}
-						a:active {text-decoration:none;}
-					</style>
-					<a href=""><span style="font-size:1.2cm;color:plum;font-weight:bold;">茉茉伺服器</span></a>
+                    <h1 ><a href="">茉茉伺服器</a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li class="current"><a href="/" ><span style="font-style:normal;font-weight:bold;">首頁</span></a></li>
-								<li><span style="font-style:normal;font-weight:bold;text-decoration:none;"><a href="rules.html">遊戲制度</span></a>
-									<ul>
-										<span style="font-style:normal;">
-										<li><a href="rules.html">新手教學</a></li>
-										<li><a href="rules.html">規定</a></li>
-										</span>
-									</ul>
-								</li>
-								<li><a href="donate.html"><span style="font-style:normal;font-weight:bold;">玩家社群</span></a>
-									<ul>
-										<span style="font-style:normal;">
-										<li><a href="rules.html">Discord<a></li>
-										<li><a href="rules.html">粉絲專頁</a></li>
-										<li><a href="rules.html">巴哈</a></li>
-										</span>
-									</ul>
-								</li>
-								<li><a href="donate.html"><span style="font-style:normal;font-weight:bold;">線上小地圖</span></a></li>
-								<li><a href="donate.html"><span style="font-style:normal;font-weight:bold;">贊助伺服器</span></a></li>
-								<li><a href="contact.html"><span style="font-style:normal;font-weight:bold;">服主與開源插件</span></a></li>
+								<li class="current"><a href="/" > 首頁</a></li>
 								<% if (session.user == undefined || session.user == '' ) { %>
-									<li><a href="/login"><span style="font-style:normal;font-weight:bold;">帳號登入</span></a>
+									<li><a href="/login">登入 \ 註冊</a>
 										<ul>
-											<span style="font-style:normal;">
 											<li><a href="/login"> 登入</a></li>
 											<li><a href="/register"> 註冊 </a></li>
-											</span>
 										</ul>
 									</li>
 								<% } else {  %> 
-                                    <li><a href="#"><span style="font-style:normal;font-weight:bold;"> <%= session.user; %> 你好! </span></a>
+                                    <li><a href="#"> <%= session.user; %> 你好! </a>
                                         <ul>
-											<span style="font-style:normal;">
                                             <li><a href="/logout"> 登出</a></li>
-											</span>
                                         </ul>
                                     </li>
 								<% } %>
