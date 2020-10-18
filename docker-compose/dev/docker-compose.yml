@@ -46,7 +46,27 @@ services:
     #   - "traefik.http.routers.app.rule=Host(`${APP_HOST}`)"
     #   - "traefik.http.routers.app.entrypoints=websecure"
     #   - "traefik.http.services.app.loadbalancer.server.port=7001"
+    container_name: app
 
+  mysql:
+    image: mysql:8.0.21
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    volumes:
+      - ./mysql:/var/lib/mysql
+    container_name: mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    container_name: adminer
   
 
 #   redis:
