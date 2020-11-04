@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+#   traefik:
+#     image: traefik:v2.1
+#     command:
+#       - --entrypoints.web.address=:80
+#       - --entrypoints.websecure.address=:443
+#       - --providers.docker=true
+#       - --certificatesresolvers.myresolver.acme.tlschallenge=true
+#       - --certificatesresolvers.myresolver.acme.email=aws_cloud@wavenet.com.tw
+#       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+#       - --certificatesresolvers.myresolver.acme.dnsChallenge.provider=cloudflare
+#       - --certificatesresolvers.myresolver.acme.dnsChallenge.delayBeforeCheck=0
+#     labels:
+#       - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
+#       - "traefik.http.routers.http_catchall.entrypoints=web"
+#       - "traefik.http.routers.http_catchall.middlewares=https_redirect"
+#       - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+#       - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+#     environment:
+#       - CF_API_EMAIL=${CF_API_EMAIL}
+#       - CF_API_KEY=${CF_API_KEY}
+#     ports:
+#       - 80:80
+#       - 443:443
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock
+#       - ./letsencrypt:/letsencrypt
+#     container_name: traefik
+
+  app:
+    build:
+      context: ../../src/
+    restart: always
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - 8000:3000
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.app.tls.certresolver=myresolver"
+    #   - "traefik.http.routers.app.rule=Host(`${APP_HOST}`)"
+    #   - "traefik.http.routers.app.entrypoints=websecure"
+    #   - "traefik.http.services.app.loadbalancer.server.port=7001"
+    container_name: app
+
+  mysql:
+    image: mysql:8.0.21
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    volumes:
+      - ./mysql:/var/lib/mysql
+    container_name: mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    container_name: adminer
+  
+
+#   redis:
+#     image: redis
+#     restart: always
+#     volumes:
+#       - ./database/redis/data:/data
+
