@@ -30,21 +30,75 @@ services:
   #   container_name: traefik_example
 
 
+  # traefik:
+  #   image: traefik:v2.3
+  #   container_name: traefik
+  #   command:
+  #     # - "--api.insecure=true"
+  #     - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+  #     - --entrypoints.web.address=:80
+  #     - --entrypoints.websecure.address=:443
+  #     - --entrypoints.web.http.redirections.entryPoint.to=websecure
+  #     - --entrypoints.web.http.redirections.entryPoint.scheme=https
+  #     - --certificatesresolvers.myresolver.acme.storage=acme.json
+  #     - --certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare
+  #     - --certificatesresolvers.myresolver.acme.dnschallenge.delaybeforecheck=0
+  #     - --certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53
+  #     #optional
+  #     # - "--certificatesresolvers.myresolver.acme.keyType=RSA4096"
+  #   labels:
+  #     # - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+  #     - --entrypoints.foo.http.redirections.entryPoint.scheme=https
+  #   environment:
+  #     - CF_API_EMAIL=${CF_API_EMAIL}
+  #     - CF_API_KEY=${CF_API_KEY}
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - "/traefik/acme:/etc/traefik/acme"
+
+  # app:
+  #   build:
+  #     context: ../../src/
+  #   restart: always
+  #   environment:
+  #     - MYSQL_HOST=${MYSQL_HOST}
+  #     - MYSQL_USER=${MYSQL_USER}
+  #     - MYSQL_DATABASE=${MYSQL_DATABASE}
+  #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+  #   ports:
+  #     - 3000:3000
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.http.routers.app.rule=Host(`${APP_HOST}`)
+  #     - traefik.http.routers.app.tls=true
+  #     - traefik.http.services.app.loadbalancer.server.port=3000
+  #   # labels:
+  #   #   - "traefik.enable=true"
+  #   #   - "traefik.http.routers.app.tls.certresolver=myresolver"
+  #   #   - "traefik.http.routers.app.rule=Host(`${APP_HOST}`)"
+  #   #   - "traefik.http.routers.app.entrypoints=websecure"
+  #   #   - "traefik.http.services.app.loadbalancer.server.port=7001"
+  #   container_name: app
+
   traefik:
-    image: traefik:v2.3
-    container_name: traefik
+    image: traefik:v2.1
     command:
-      # - "--api.insecure=true"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.storage=acme.json"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.delaybeforecheck=0"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53"
-      #optional
-      # - "--certificatesresolvers.myresolver.acme.keyType=RSA4096"
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --certificatesresolvers.myresolver.acme.email=${CF_API_EMAIL}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.myresolver.acme.dnsChallenge.provider=cloudflare
+      - --certificatesresolvers.myresolver.acme.dnsChallenge.delayBeforeCheck=0
+    labels:
+      - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
+      - "traefik.http.routers.http_catchall.entrypoints=web"
+      - "traefik.http.routers.http_catchall.middlewares=https_redirect"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
     environment:
       - CF_API_EMAIL=${CF_API_EMAIL}
       - CF_API_KEY=${CF_API_KEY}
@@ -52,7 +106,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - "/traefik/acme:/etc/traefik/acme"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt:/letsencrypt
+    container_name: traefik
 
   app:
     build:
@@ -67,16 +123,14 @@ services:
       - 3000:3000
     labels:
       - "traefik.enable=true"
-      - traefik.http.routers.app.rule=Host(`${APP_HOST}`)
-      - traefik.http.routers.app.tls=true
-      - traefik.http.services.app.loadbalancer.server.port=3000
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.app.tls.certresolver=myresolver"
-    #   - "traefik.http.routers.app.rule=Host(`${APP_HOST}`)"
-    #   - "traefik.http.routers.app.entrypoints=websecure"
-    #   - "traefik.http.services.app.loadbalancer.server.port=7001"
+      - "traefik.http.routers.app.tls.certresolver=myresolver"
+      - "traefik.http.routers.app.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
     container_name: app
+
+
+
 
   mysql:
     image: mysql:8.0.21
