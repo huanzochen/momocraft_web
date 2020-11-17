@@ -13,7 +13,7 @@ let hour = 3600 * 1000;
 
 /* READ *****************************************/
 
-exports.getPage = async (req, res, next) => {
+const getPage = async (req, res, next) => {
 
     await Member.getFieldLength(req,res)
     .then(([rows]) => {
@@ -31,7 +31,7 @@ exports.getPage = async (req, res, next) => {
 
 /* SUBMIT **********************************/
 
-exports.submitData = async (req, res, next) => {
+const submitData = async (req, res, next) => {
 
     await Member.getFieldLength(req,res)
         .then(([rows]) => {
@@ -112,9 +112,33 @@ exports.submitData = async (req, res, next) => {
     }
 }
 
+/* FORGET PASSWORD **********************************/
+
+
+const forgetPasswordGetPage = async(req, res, next) => {
+    res.render('forget_password', { 
+        _: _,
+        errorcode: '',
+        session: req.session,
+        currentPage: 'forget_password'
+    });
+}
+
+const forgetPasswordSubmit = async(req, res, next) => {
+    console.log('req.body')
+    console.log(req.body)
+}
+
+
 
 
 
 
 /*  console.dir(rows[(_.map(rows, "name").indexOf("info"))].text); */
 
+
+
+exports.getPage = getPage
+exports.submitData = submitData
+exports.forgetPasswordGetPage = forgetPasswordGetPage
+exports.forgetPasswordSubmit = forgetPasswordSubmit

@@ -19,15 +19,16 @@
 								</li>
 
 								<% if (session.user == undefined || session.user == '' ) { %>
-									<% if (currentPage === 'login') { %>
+									<% if (currentPage === 'login' || currentPage === 'forget_password') { %>
 										<li class="current">
 									<% } else {  %> 
 										<li>
 									<% } %>
-										<a href="/login">登入 \ 註冊</a>
+										<a href="/login">登入 \ 註冊 </a>
 										<ul>
-											<li><a href="/login"> 登入</a></li>
+											<li><a href="/login"> 登入 </a></li>
 											<li><a href="/register"> 註冊 </a></li>
+											<li><a href="/forget"> 忘記密碼 </a></li>
 										</ul>
 									</li>
 								<% } else {  %> 
