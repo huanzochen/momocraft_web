@@ -1,5 +1,7 @@
+require('dotenv').config()
 const db = require('../util/momodb');
 const crypt = require('../util/crypt');
+const { v3: uuidv3 } = require('uuid');
 
 
 
@@ -23,6 +25,7 @@ module.exports = class {
         let account = req.body.account;
         let password = req.body.password;
         let email = req.body.email;
+        uuidv3(`${account}`, process.env.UUID_NAMESPACE)
         password = crypt.crypt(password);
         return(db.execute("INSERT INTO `web`.`member` (`act_name`, `pwd`, `email`) VALUES (?, ?, ?)", [account, password, email]));
     }
