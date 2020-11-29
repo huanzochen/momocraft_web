@@ -4,8 +4,10 @@ var router = express.Router();
 const login = require('../controller/login');
 
 /* GET home page. */
-router.get('/', login.getPage);
-/* POST password */
-router.post('/submit', login.submitData)
+router.get('/', login.forgetPasswordGetPage);
+/* Forget Password */
+router.post('/submit', login.forgetPasswordSubmit)
 
 module.exports = router;
+
+

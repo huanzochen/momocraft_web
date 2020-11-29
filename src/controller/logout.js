@@ -8,7 +8,7 @@ const Common = require('../models/common');
 
 exports.getPage = async (req, res, next) => {
     req.session.user = '';
-    res.redirect('http://' + req.hostname + '/');
+    res.redirect('/');
 };
 
 /*  console.dir(rows[(_.map(rows, "name").indexOf("info"))].text); */

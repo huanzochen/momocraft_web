@@ -1,5 +1,7 @@
+require('dotenv').config()
 const db = require('../util/momodb');
 const crypt = require('../util/crypt');
+const { v3: uuidv3 } = require('uuid');
 
 
 
@@ -8,9 +10,12 @@ module.exports = class {
 
     // READ
 
-    static queryMember(req,res) {
-        let account = req.body.account;
+    static queryMember(req,res, account) {
         return(db.execute('SELECT * FROM web.member where act_name = ?', [account]));
+    }
+
+    static queryEmail(req,res, email) {
+        return(db.execute('SELECT * FROM web.member where email = ?', [email]));
     }
 
     static getFieldLength(req,res) {
@@ -24,7 +29,7 @@ module.exports = class {
         let password = req.body.password;
         let email = req.body.email;
         password = crypt.crypt(password);
-        return(db.execute("INSERT INTO `web`.`member` (`act_name`, `pwd`, `email`) VALUES (?, ?, ?)", [account, password, email]));
+        return(db.execute("INSERT INTO `web`.`member` (`uuid`, `act_name`, `pwd`, `email`) VALUES (?, ?, ?, ?)", [uuidv3(`${account}`, process.env.UUID_NAMESPACE), account, password, email]));
     }
 
     /*

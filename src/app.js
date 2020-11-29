@@ -16,6 +16,7 @@ var donateRouter = require('./routes/donate');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var logoutRouter = require('./routes/logout');
+var forgetPasswordRouter = require('./routes/forget')
 
 
 
@@ -59,6 +60,7 @@ app.use('/donate', donateRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/logout', logoutRouter);
+app.use('/forget', forgetPasswordRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
