@@ -25,9 +25,8 @@ module.exports = class {
         let account = req.body.account;
         let password = req.body.password;
         let email = req.body.email;
-        uuidv3(`${account}`, process.env.UUID_NAMESPACE)
         password = crypt.crypt(password);
-        return(db.execute("INSERT INTO `web`.`member` (`act_name`, `pwd`, `email`) VALUES (?, ?, ?)", [account, password, email]));
+        return(db.execute("INSERT INTO `web`.`member` (`uuid`, `act_name`, `pwd`, `email`) VALUES (?, ?, ?, ?)", [uuidv3(`${account}`, process.env.UUID_NAMESPACE), account, password, email]));
     }
 
     /*

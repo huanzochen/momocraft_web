@@ -83,6 +83,8 @@ exports.submitData = async (req, res, next) => {
                 });
             }
         });
+        console.log('isregistered')
+        console.log(isregistered)
     if (isregistered.affectedRows == 1) {
         res.render('register', {
             _: _,
