@@ -1,6 +1,9 @@
+"use strict";
+require('dotenv').config()
 const moment = require('moment');
 const _ = require('lodash');
 const session = require('express-session')
+const nodemailer = require("nodemailer");
 
 const app = require('../app');
 const fd = require('../util/findarray');
@@ -126,6 +129,48 @@ const forgetPasswordGetPage = async(req, res, next) => {
 const forgetPasswordSubmit = async(req, res, next) => {
     console.log('req.body')
     console.log(req.body)
+    let transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        secure: false, // upgrade later with STARTTLS
+        auth: {
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.MAIL_PASSWORD
+        },
+        tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+        }
+    });
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"茉茉醬" <noreply@mail.momocraft.tw>', // sender address
+        to: ['momoservertw@gmail.com'], // list of receivers
+        subject: "安安你好嗎", // Subject line
+        text: "請開啟信箱的 HTML 信件功能來閱讀這封信", // plain text body
+        html: `
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <style></style>
+            </head>
+            <body>
+                <p>測試~~</p>
+                <p>你好啊</p>
+            </body>
+        </html>
+      `
+    });
+    console.log("Message sent: %s", info.messageId);
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    res.render('forget_password', { 
+        _: _,
+        errorcode: '請查收你的郵件並重設密碼喔~',
+        session: req.session,
+        currentPage: 'forget_password'
+    });
 }
 
 
