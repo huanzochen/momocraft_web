@@ -10,9 +10,12 @@ module.exports = class {
 
     // READ
 
-    static queryMember(req,res) {
-        let account = req.body.account;
+    static queryMember(req,res, account) {
         return(db.execute('SELECT * FROM web.member where act_name = ?', [account]));
+    }
+
+    static queryEmail(req,res, email) {
+        return(db.execute('SELECT * FROM web.member where email = ?', [email]));
     }
 
     static getFieldLength(req,res) {

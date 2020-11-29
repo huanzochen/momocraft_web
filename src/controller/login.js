@@ -12,13 +12,14 @@ const crypt = require('../util/crypt');
 const Common = require('../models/common');
 const Member = require('../models/member');
 const LoginLog = require('../models/loginlog');
+const ForgetLog = require('../models/forgetlog');
 
 let hour = 3600 * 1000;
 
 /* READ *****************************************/
 
 const getPage = async (req, res, next) => {
-
+    let fieldlength;
     await Member.getFieldLength(req,res)
     .then(([rows]) => {
         fieldlength = rows;
@@ -36,6 +37,10 @@ const getPage = async (req, res, next) => {
 /* SUBMIT **********************************/
 
 const submitData = async (req, res, next) => {
+    let fieldlength;
+    let verify;
+    let errorTimes;
+
     await Member.getFieldLength(req,res)
         .then(([rows]) => {
             fieldlength = rows;
@@ -44,7 +49,8 @@ const submitData = async (req, res, next) => {
     /* 強制限制欄位為DB限制之長度(防有人偷改) */
     req.body.account = (req.body.account).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("act_name"))].CHARACTER_MAXIMUM_LENGTH));
     req.body.password =  (req.body.password).substr(0, (fieldlength[(_.map(fieldlength, "COLUMN_NAME").indexOf("pwd"))].CHARACTER_MAXIMUM_LENGTH));
-    await Member.queryMember(req,res)
+    let account = req.body.account;
+    await Member.queryMember(req,res, account)
         .then(([rows]) => {
             verify = rows;
         })
@@ -58,6 +64,7 @@ const submitData = async (req, res, next) => {
             session: req.session,
             currentPage: 'login'
         });
+        return
     }
     else {
         await LoginLog.loginErrorTimes(req,res,verify[0].uuid, moment().subtract(1, 'hour').format())
@@ -72,6 +79,7 @@ const submitData = async (req, res, next) => {
                 session: req.session,
                 currentPage: 'login'
             });
+            return
         }
         /*  檢查密碼是否正確 */
         let pwdcheck = crypt.crypt(req.body.password);
@@ -129,6 +137,39 @@ const forgetPasswordGetPage = async(req, res, next) => {
 const forgetPasswordSubmit = async(req, res, next) => {
     console.log('req.body')
     console.log(req.body)
+    let forgetTimes;
+    let verify;
+    const email = req.body.email;
+    await Member.queryEmail(req, res, email)
+        .then(([rows]) => {
+            verify = rows;
+        })
+        .catch(err => console.dir(err));
+    /*  檢查用戶是否存在 */ 
+    if (JSON.stringify(verify) === '[]') {
+        console.dir("此用戶不存在");
+        res.render('forget_password', { 
+            _: _,
+            errorcode: '查無此帳號~',
+            session: req.session,
+            currentPage: 'forget_password'
+        });
+        return
+    }
+    await ForgetLog.forgetTimesQuery(req, res, email, moment().subtract(1, 'hour').format())
+        .then(([rows]) => {
+            forgetTimes = rows
+        })
+        .catch(err => console.dir(err));
+    if( forgetTimes.length > 5) {
+        res.render('forget_password', { 
+            _: _,
+            errorcode: '你提交太多重設密碼請求了 ><',
+            session: req.session,
+            currentPage: 'forget_password'
+        });
+        return 
+    }
     let transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
         port: process.env.MAIL_PORT,
@@ -145,7 +186,7 @@ const forgetPasswordSubmit = async(req, res, next) => {
     // send mail with defined transport object
     let info = await transporter.sendMail({
         from: '"茉茉醬" <noreply@mail.momocraft.tw>', // sender address
-        to: ['momoservertw@gmail.com'], // list of receivers
+        to: [email], // list of receivers
         subject: "安安你好嗎", // Subject line
         text: "請開啟信箱的 HTML 信件功能來閱讀這封信", // plain text body
         html: `
@@ -165,6 +206,7 @@ const forgetPasswordSubmit = async(req, res, next) => {
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    await ForgetLog.forgetEmailSend(req, res, email, true)
     res.render('forget_password', { 
         _: _,
         errorcode: '請查收你的郵件並重設密碼喔~',
@@ -174,11 +216,6 @@ const forgetPasswordSubmit = async(req, res, next) => {
 }
 
 
-
-
-
-
-/*  console.dir(rows[(_.map(rows, "name").indexOf("info"))].text); */
 
 
 
