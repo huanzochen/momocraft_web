@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
-const login = require('../controller/login');
+const login = require('../controller/login')
 
 /* GET home page. */
-router.get('/', login.getPage);
+router.get('/', login.getPage)
+
 /* POST password */
 router.post('/submit', login.submitData)
 
-module.exports = router;
+module.exports = router

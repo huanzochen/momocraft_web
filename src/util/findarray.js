@@ -1,7 +1,7 @@
-const _ = require('lodash');
+const _ = require('lodash')
 
 module.exports = function (rows, column, value) {
-    return (_.map(rows, column).indexOf(value))
+  return _.map(rows, column).indexOf(value)
 }
 
 /** usage 

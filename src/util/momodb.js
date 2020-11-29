@@ -1,6 +1,6 @@
 // get the client
 require('dotenv').config()
-const mysql = require('mysql2');
+const mysql = require('mysql2')
 
 // create the pool to database
 const pool = mysql.createPool({
@@ -8,6 +8,6 @@ const pool = mysql.createPool({
   user: process.env.MYSQL_USER,
   database: process.env.MYSQL_DATABASE,
   password: process.env.MYSQL_PASSWORD
-});
+})
 
-module.exports = pool.promise();
+module.exports = pool.promise()

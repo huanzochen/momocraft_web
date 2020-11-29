@@ -1,16 +1,16 @@
-const _ = require('lodash');
-const crypto = require('crypto');
+const _ = require('lodash')
+const crypto = require('crypto')
 
 const crypt = (cryptstring) => {
-    const hash = crypto.createHash('sha256');
-    hash.update((hash.update(cryptstring) + 'edwardsekaino.1'));
-    return (hash.digest('hex'));
+  const hash = crypto.createHash('sha256')
+  hash.update(hash.update(cryptstring) + 'edwardsekaino.1')
+  return hash.digest('hex')
 }
 
 
 module.exports = {
-    crypt
-};
+  crypt
+}
 
 
 /*

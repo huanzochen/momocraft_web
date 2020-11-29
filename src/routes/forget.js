@@ -1,13 +1,14 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
-const login = require('../controller/login');
+const login = require('../controller/login')
 
 /* GET home page. */
-router.get('/', login.forgetPasswordGetPage);
+router.get('/', login.forgetPasswordGetPage)
+
 /* Forget Password */
 router.post('/submit', login.forgetPasswordSubmit)
 
-module.exports = router;
+module.exports = router
 
 
