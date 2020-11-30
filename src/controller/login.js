@@ -6,7 +6,7 @@ const session = require('express-session')
 const nodemailer = require('nodemailer')
 
 const app = require('../app')
-const fd = require('../util/findarray')
+const tool = require('../util/cutomtools')
 const crypt = require('../util/crypt')
 
 const Common = require('../models/common')
@@ -38,7 +38,7 @@ const getPage = async (req, res, next) => {
 
 const submitData = async (req, res, next) => {
   let fieldlength
-  let verify
+  let momocraftMember
   let errorTimes
 
   await Member.getFieldLength(req, res)
@@ -51,25 +51,29 @@ const submitData = async (req, res, next) => {
   req.body.account = req.body.account.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('act_name')].CHARACTER_MAXIMUM_LENGTH)
   req.body.password = req.body.password.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('pwd')].CHARACTER_MAXIMUM_LENGTH)
   let account = req.body.account
-  await Member.queryMember(req, res, account)
+  await Member.queryMomocraftMember(req, res, account)
     .then(([rows]) => {
-      verify = rows
+      momocraftMember = rows
     })
     .catch(err => console.dir(err))
 
   /*  檢查用戶是否存在 */ 
-  if (JSON.stringify(verify) === '[]') {
+  if (JSON.stringify(momocraftMember) === '[]') {
     console.dir('此用戶不存在')
     res.render('login', { 
       _: _,
       errorcode: '查無此帳號或密碼錯誤!',
+      fieldlength: fieldlength,
       session: req.session,
       currentPage: 'login'
     })
     return
   }
   else {
-    await LoginLog.loginErrorTimes(req, res, verify[0].uuid, moment().subtract(1, 'hour').format())
+    await LoginLog.loginErrorTimes(req, res,
+      momocraftMember[_.map(momocraftMember, 'realname').indexOf(req.body.account)].realname,
+      moment().subtract(1, 'hour').format()
+    )
       .then(([rows]) => {
         errorTimes = rows
       })
@@ -78,6 +82,7 @@ const submitData = async (req, res, next) => {
       res.render('login', { 
         _: _,
         errorcode: '密碼錯誤多次, 請稍後在試',
+        fieldlength: fieldlength,
         session: req.session,
         currentPage: 'login'
       })
@@ -85,10 +90,13 @@ const submitData = async (req, res, next) => {
     }
 
     /*  檢查密碼是否正確 */
-    let pwdcheck = crypt.crypt(req.body.password)
-    if (pwdcheck == verify[_.map(verify, 'act_name').indexOf(req.body.account)].pwd) {
+    // 將使用者輸入的密碼 pwdcheck 套 authme 演算法與 DB 中的密碼比對
+    let pwdcheck = crypt.validate(req.body.password, momocraftMember[_.map(momocraftMember, 'realname').indexOf(req.body.account)].password)
+    if (pwdcheck === tool.getpwd(momocraftMember[_.map(momocraftMember, 'realname').indexOf(req.body.account)].password)) {
       console.dir('密碼核對正確!')
-      await LoginLog.successLogin(req, res, verify)
+      await LoginLog.successLogin(req, res,
+        momocraftMember[_.map(momocraftMember, 'realname').indexOf(req.body.account)].realname
+      )
       if (req.session.views) {
 
         /* 密碼正確，返回 */
@@ -114,13 +122,16 @@ const submitData = async (req, res, next) => {
       }
     }
     else {
-      await LoginLog.errorLogin(req, res, verify)
+      await LoginLog.errorLogin(req, res,
+        momocraftMember[_.map(momocraftMember, 'realname').indexOf(req.body.account)].realname
+      )
       console.dir('密碼核對錯誤!')
       console.dir('用戶資料')
-      console.dir(verify)
+      console.dir(momocraftMember)
       res.render('login', { 
         _: _,
         errorcode: '查無此帳號或密碼錯誤!',
+        fieldlength: fieldlength,
         session: req.session,
         currentPage: 'login'
       })
@@ -144,16 +155,19 @@ const forgetPasswordSubmit = async(req, res, next) => {
   console.log('req.body')
   console.log(req.body)
   let forgetTimes
-  let verify
+  let momocraftMember
   const email = req.body.email
-  await Member.queryEmail(req, res, email)
+  await Member.queryMomocraftEmail(req, res, email)
     .then(([rows]) => {
-      verify = rows
+      momocraftMember = rows
     })
-    .catch(err => console.dir(err))
+    .catch(err => {
+      console.dir(err) 
+      return
+    })
 
   /*  檢查用戶是否存在 */ 
-  if (JSON.stringify(verify) === '[]') {
+  if (JSON.stringify(momocraftMember) === '[]') {
     console.dir('此用戶不存在')
     res.render('forget_password', { 
       _: _,

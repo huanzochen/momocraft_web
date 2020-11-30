@@ -3,7 +3,7 @@ const _ = require('lodash')
 const session = require('express-session')
 
 const app = require('../app')
-const fd = require('../util/findarray')
+const tool = require('../util/cutomtools')
 
 const Member = require('../models/member')
 
@@ -31,6 +31,7 @@ exports.getPage = async (req, res, next) => {
 
 exports.submitData = async (req, res, next) => {
   let isregistered
+  let fieldlength
 
   await Member.getFieldLength(req, res)
     .then(([rows]) => {

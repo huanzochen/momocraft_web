@@ -1,11 +1,11 @@
-const db = require('../util/momodb')
+const web = require('../util/webdb')
 
 
 // READ
 
 module.exports = class {
   static getCommon() {
-    return db.query('SELECT * FROM web.common;')
+    return web.query('SELECT * FROM web.common;')
   }
 
 
