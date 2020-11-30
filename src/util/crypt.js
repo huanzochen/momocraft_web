@@ -12,15 +12,25 @@ const tool = require('./cutomtools')
 // authme 密碼演算法
 const validate = (originPassword, stringInAuthme) => {
   const hash = crypto.createHash('sha256')
-  const hash2 = crypto.createHash('sha256')
-  hash.update(originPassword)
-  hash2.update(hash.digest('hex') + tool.getsalt(stringInAuthme))
-  return hash2.digest('hex')
+    .update(originPassword)
+    .digest('hex')
+  return crypto.createHash('sha256')
+    .update(hash + tool.getsalt(stringInAuthme))
+    .digest('hex')
+}
+
+const generateToken = () => {
+  const hash = crypto.createHmac('sha256', 'emilyisno.1')
+    .update('I love cupcakes')
+    .digest('hex')
+  // return hash
+  return crypto.randomBytes(25).toString('hex')
 }
 
 
 module.exports = {
-  validate
+  validate,
+  generateToken
 }
 
 

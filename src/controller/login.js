@@ -147,7 +147,8 @@ const forgetPasswordGetPage = async(req, res, next) => {
     _: _,
     errorcode: '',
     session: req.session,
-    currentPage: 'forget_password'
+    currentPage: 'forget_password',
+    state: ''
   })
 }
 
@@ -173,7 +174,8 @@ const forgetPasswordSubmit = async(req, res, next) => {
       _: _,
       errorcode: '查無此帳號~',
       session: req.session,
-      currentPage: 'forget_password'
+      currentPage: 'forget_password',
+      state: ''
     })
     return
   }
@@ -182,15 +184,18 @@ const forgetPasswordSubmit = async(req, res, next) => {
       forgetTimes = rows
     })
     .catch(err => console.dir(err))
-  if (forgetTimes.length > 5) {
-    res.render('forget_password', { 
-      _: _,
-      errorcode: '你提交太多重設密碼請求了 ><',
-      session: req.session,
-      currentPage: 'forget_password'
-    })
-    return 
-  }
+  // if (forgetTimes.length > 5) {
+  //   res.render('forget_password', { 
+  //     _: _,
+  //     errorcode: '你提交太多重設密碼請求了 ><',
+  //     session: req.session,
+  //     currentPage: 'forget_password',
+  //     state: ''
+  //   })
+  //   return 
+  // }
+
+  let emailResetToken = crypt.generateToken()
   let transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
@@ -206,9 +211,9 @@ const forgetPasswordSubmit = async(req, res, next) => {
   })
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"茉茉醬" <noreply@mail.momocraft.tw>', // sender address
+    from: '"茉茉醬💗" <noreply@mail.momocraft.tw>', // sender address
     to: [email], // list of receivers
-    subject: '安安你好嗎', // Subject line
+    subject: '茉茉🌺伺服器-密碼重設信件', // Subject line
     text: '請開啟信箱的 HTML 信件功能來閱讀這封信', // plain text body
     html: `
         <html>
@@ -217,8 +222,11 @@ const forgetPasswordSubmit = async(req, res, next) => {
                 <style></style>
             </head>
             <body>
-                <p>測試~~</p>
-                <p>你好啊</p>
+                <p>忘記密碼了嗎 🤪🤪🤪</p>
+                <p>點擊此連結來重設你的密碼噢😋</p>
+                <p>連結將在 3 小時候失效🤗</p>
+                <a href="${process.env.APP_URL}/forget/resetPassword/${emailResetToken}"> 
+                ${process.env.APP_URL}/forget/resetPassword/${emailResetToken}</a>
             </body>
         </html>
       `
@@ -227,13 +235,85 @@ const forgetPasswordSubmit = async(req, res, next) => {
   // Preview only available when sending through an Ethereal account
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-  await ForgetLog.forgetEmailSend(req, res, email, true)
+
+  await ForgetLog.forgetEmailSend(req, res, email, true, emailResetToken)
   res.render('forget_password', { 
     _: _,
     errorcode: '請查收你的郵件並重設密碼喔~',
     session: req.session,
-    currentPage: 'forget_password'
+    currentPage: 'forget_password',
+    state: ''
   })
+}
+
+const resetPassword = async(req, res, next) => {
+  let token = req.params.token
+  let tokenUser
+  await ForgetLog.tokenIsExpired(req, res, 
+    token,
+    moment().subtract(3, 'hour').format()
+  )
+    .then(([rows]) => {
+      tokenUser = rows
+    })
+    .catch(err => console.dir(err))
+
+  /*  檢查連結是否有效 */ 
+  if (JSON.stringify(tokenUser) === '[]') {
+    console.dir('該連結已失效或無效')
+    res.render('forget_password', { 
+      _: _,
+      errorcode: '該連結已經失效囉',
+      session: req.session,
+      currentPage: 'forget_password',
+      token: token,
+      state: ''
+    })
+    return
+  }
+  else {
+    console.log('該重設密碼 token 有效!')
+    res.render('forget_password', { 
+      _: _,
+      errorcode: '',
+      session: req.session,
+      currentPage: 'forget_password',
+      token: token,
+      state: 'resetpassword'
+    })
+  }
+}
+
+const resetPasswordSubmit = async(req, res, next) => {
+  let token = req.params.token
+  let tokenUser
+  await ForgetLog.tokenIsExpired(req, res, 
+    token, 
+    moment().subtract(3, 'hour').format()
+  )
+    .then(([rows]) => {
+      tokenUser = rows
+    })
+    .catch(err => console.dir(err))
+
+  /*  檢查用戶是否存在 */ 
+  if (JSON.stringify(tokenUser) === '[]') {
+    console.dir('該連結已失效或無效')
+    res.render('forget_password', { 
+      _: _,
+      errorcode: '該連結已經失效囉',
+      session: req.session,
+      currentPage: 'forget_password',
+      token: token,
+      state: 'resetpassword'
+    })
+    return
+  }
+  else {
+    console.log('req.body')
+    console.log(req.body)
+    await ForgetLog.tokenExpired(req, res, token)
+  }
 }
 
 
@@ -244,3 +324,5 @@ exports.getPage = getPage
 exports.submitData = submitData
 exports.forgetPasswordGetPage = forgetPasswordGetPage
 exports.forgetPasswordSubmit = forgetPasswordSubmit
+exports.resetPassword = resetPassword
+exports.resetPasswordSubmit = resetPasswordSubmit
