@@ -24,3 +24,9 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# data volumes and credentials
+docker-compose/dev/mysql
+docker-compose/dev/letsencrypt
+docker-compose/production/mysql
+docker-compose/production/letsencrypt
