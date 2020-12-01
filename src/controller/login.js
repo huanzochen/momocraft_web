@@ -183,16 +183,16 @@ const forgetPasswordSubmit = async(req, res, next) => {
       forgetTimes = rows
     })
     .catch(err => console.dir(err))
-  // if (forgetTimes.length > 5) {
-  //   res.render('forget_password', { 
-  //     _: _,
-  //     errorcode: '你提交太多重設密碼請求了 ><',
-  //     session: req.session,
-  //     currentPage: 'forget_password',
-  //     state: ''
-  //   })
-  //   return 
-  // }
+  if (forgetTimes.length > 5) {
+    res.render('forget_password', { 
+      _: _,
+      errorcode: '你提交太多重設密碼請求了 ><',
+      session: req.session,
+      currentPage: 'forget_password',
+      state: ''
+    })
+    return 
+  }
 
   let emailResetToken = crypt.generateToken()
   let transporter = nodemailer.createTransport({
