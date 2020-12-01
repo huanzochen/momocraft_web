@@ -34,10 +34,10 @@ services:
       context: ../../src/
     restart: always
     environment:
-      - MYSQL_HOST=${MYSQL_WEB_DB_HOST}
-      - MYSQL_USER=${MYSQL_WEB_DB_USER}
-      - MYSQL_DATABASE=${MYSQL_WEB_DB_DATABASE}
-      - MYSQL_PASSWORD=${MYSQL_WEB_DB_PASSWORD}
+      - MYSQL_WEB_DB_HOST=${MYSQL_WEB_DB_HOST}
+      - MYSQL_WEB_DB_USER=${MYSQL_WEB_DB_USER}
+      - MYSQL_WEB_DB_DATABASE=${MYSQL_WEB_DB_DATABASE}
+      - MYSQL_WEB_DB_PASSWORD=${MYSQL_WEB_DB_PASSWORD}
     ports:
       - 8000:3000
     # labels:
