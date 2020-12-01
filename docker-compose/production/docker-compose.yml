@@ -115,10 +115,10 @@ services:
       context: ../../src/
     restart: always
     environment:
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_WEB_DB_HOST}
+      - MYSQL_USER=${MYSQL_WEB_DB_USER}
+      - MYSQL_DATABASE=${MYSQL_WEB_DB_DATABASE}
+      - MYSQL_PASSWORD=${MYSQL_WEB_DB_PASSWORD}
     ports:
       - 3000:3000
     labels:
@@ -129,17 +129,14 @@ services:
       - "traefik.http.services.app.loadbalancer.server.port=3000"
     container_name: app
 
-
-
-
   mysql:
     image: mysql:8.0.21
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_WEB_DB_DATABASE}
+      - MYSQL_USER=${MYSQL_WEB_DB_USER}
+      - MYSQL_PASSWORD=${MYSQL_WEB_DB_PASSWORD}
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     volumes:
       - ./mysql:/var/lib/mysql
