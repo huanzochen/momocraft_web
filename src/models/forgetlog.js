@@ -10,6 +10,9 @@ module.exports = class {
   static forgetTimesQuery(req, res, email, time) {
     return web.execute('SELECT email, success FROM web.forgetlog WHERE email = ? AND updated_time > ? AND success = true', [email, time])
   }
+  static forgetEmailQuery(req, res, token) {
+    return web.execute('SELECT email FROM web.forgetlog WHERE token = ?', [token])
+  }
   static tokenIsExpired(req, res, token, time) {
     return web.execute('SELECT email, token, updated_time FROM web.forgetlog WHERE token = ? AND updated_time > ? AND token_used = false ', [token, time])
   }

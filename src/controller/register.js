@@ -40,8 +40,8 @@ exports.submitData = async (req, res, next) => {
     .catch(err => console.dir(err))
 
   /* 強制限制欄位為DB限制之長度(防有人偷改) */
-  req.body.account = req.body.account.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('act_name')].CHARACTER_MAXIMUM_LENGTH)
-  req.body.password = req.body.password.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('pwd')].CHARACTER_MAXIMUM_LENGTH)
+  req.body.account = req.body.account.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('realname')].CHARACTER_MAXIMUM_LENGTH)
+  req.body.password = req.body.password.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('password')].CHARACTER_MAXIMUM_LENGTH)
   req.body.passwordCheck = req.body.passwordCheck.substr(0, 16)
   req.body.email = req.body.email.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('email')].CHARACTER_MAXIMUM_LENGTH)
 

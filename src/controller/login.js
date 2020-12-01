@@ -48,8 +48,7 @@ const submitData = async (req, res, next) => {
     .catch(err => console.dir(err))
 
   /* 強制限制欄位為DB限制之長度(防有人偷改) */
-  req.body.account = req.body.account.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('act_name')].CHARACTER_MAXIMUM_LENGTH)
-  req.body.password = req.body.password.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('pwd')].CHARACTER_MAXIMUM_LENGTH)
+  req.body.account = req.body.account.substr(0, fieldlength[_.map(fieldlength, 'COLUMN_NAME').indexOf('realname')].CHARACTER_MAXIMUM_LENGTH)
   let account = req.body.account
   await Member.queryMomocraftMember(req, res, account)
     .then(([rows]) => {
@@ -258,7 +257,7 @@ const resetPassword = async(req, res, next) => {
     })
     .catch(err => console.dir(err))
 
-  /*  檢查連結是否有效 */ 
+  /*  檢查 token 是否有效 */ 
   if (JSON.stringify(tokenUser) === '[]') {
     console.dir('該連結已失效或無效')
     res.render('forget_password', { 
@@ -287,6 +286,9 @@ const resetPassword = async(req, res, next) => {
 const resetPasswordSubmit = async(req, res, next) => {
   let token = req.params.token
   let tokenUser
+  let momocraftMember
+  let forgetEmail
+  let fieldlength
   await ForgetLog.tokenIsExpired(req, res, 
     token, 
     moment().subtract(3, 'hour').format()
@@ -296,12 +298,12 @@ const resetPasswordSubmit = async(req, res, next) => {
     })
     .catch(err => console.dir(err))
 
-  /*  檢查用戶是否存在 */ 
+  /*  檢查 token 是否有效 */ 
   if (JSON.stringify(tokenUser) === '[]') {
     console.dir('該連結已失效或無效')
     res.render('forget_password', { 
       _: _,
-      errorcode: '該連結已經失效囉',
+      errorcode: '該重設連結已經失效囉',
       session: req.session,
       currentPage: 'forget_password',
       token: token,
@@ -310,9 +312,48 @@ const resetPasswordSubmit = async(req, res, next) => {
     return
   }
   else {
-    console.log('req.body')
-    console.log(req.body)
+    let password = req.body.password
+    let password_confirm = req.body.password_confirm
+    if (password !== password_confirm) { 
+      res.render('forget_password', { 
+        _: _,
+        errorcode: '密碼不一致',
+        session: req.session,
+        currentPage: 'forget_password',
+        token: token,
+        state: 'resetpassword'
+      })
+    }
+    await ForgetLog.forgetEmailQuery(req, res, token)
+      .then(([rows]) => {
+        forgetEmail = rows[0].email
+      })
+    await Member.queryMomocraftEmail(req, res, forgetEmail)
+      .then(([rows]) => {
+        momocraftMember = rows
+      })
+      .catch(err => console.dir(err))
+    let newPwd = crypt.newPassword(
+      password, 
+      momocraftMember[_.map(momocraftMember, 'email').indexOf(forgetEmail)].password
+    )
+    await Member.resetMemberPassword(req, res, 
+      forgetEmail, 
+      newPwd
+    )
+    await Member.getFieldLength(req, res)
+      .then(([rows]) => {
+        fieldlength = rows
+      })
+      .catch(err => console.dir(err))
     await ForgetLog.tokenExpired(req, res, token)
+    res.render('login', { 
+      _: _,
+      errorcode: '密碼重設完成, 請重新登入!',
+      fieldlength: fieldlength,
+      session: req.session,
+      currentPage: 'login'
+    })
   }
 }
 

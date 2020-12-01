@@ -8,26 +8,26 @@ const momocraft = require('../util/momocraftdb')
 module.exports = class {
 
   // READ
-
   static queryMomocraftEmail(req, res, email) {
     return momocraft.execute('SELECT * FROM authme.authme where email = ?', [email])
   }
-
   static queryMomocraftMember(req, res, account) {
     return momocraft.execute('SELECT * FROM authme.authme where realname = ?', [account])
   }
-
   static getFieldLength(req, res) {
-    return web.execute('SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = \'web\' AND TABLE_NAME = \'member\'')
+    return momocraft.execute('SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = \'authme\' AND TABLE_NAME = \'authme\'')
   }
+  
   // WRITE
-
   static writeNewMember(req, res) {
     let account = req.body.account
     let password = req.body.password
     let email = req.body.email
     password = crypt.crypt(password)
     return web.execute('INSERT INTO `web`.`member` (`uuid`, `act_name`, `pwd`, `email`) VALUES (?, ?, ?, ?)', [uuidv3(`${account}`, process.env.UUID_NAMESPACE), account, password, email])
+  }
+  static resetMemberPassword(req, res, email, password) {
+    return momocraft.execute('UPDATE authme.authme SET password = ? where email = ?', [password, email])
   }
 
   /*
@@ -48,7 +48,4 @@ module.exports = class {
         }  
         });
     */
-
-
-
 }
