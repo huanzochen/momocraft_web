@@ -1,4 +1,4 @@
 ## How to restore data in mysql?
 ```
-docker exec -i mysql sh -c 'exec mysql -uapi -p"${MYSQL_WEB_DB_PASSWORD}"' < ../../documents/DB_DUMP/Dump20201201.sql
+docker exec -i mysql sh -c 'exec mysql -uapi -p"${MYSQL_WEB_DB_PASSWORD}" web' < ../../documents/DB_DUMP/Dump20201201.sql
 ```
